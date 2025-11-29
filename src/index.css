@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+:root { 
+  color-scheme: dark; 
+}
+
+/* === Animated gradient for hero === */
+@keyframes gradient-move {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.hero-animated-gradient {
+  background: linear-gradient(
+    120deg,
+    rgba(16,185,129,0.18),   /* emerald */
+    rgba(56,189,248,0.18),   /* sky */
+    rgba(168,85,247,0.18)    /* purple */
+  );
+  background-size: 200% 200%;
+  animation: gradient-move 8s ease-in-out infinite;
+}
