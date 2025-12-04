@@ -19,8 +19,21 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen grid place-items-center p-4">
-      <form onSubmit={submit} className="w-full max-w-sm bg-white/5 border border-white/10 rounded-3xl p-6 space-y-3">
+    <div
+      className="min-h-screen grid place-items-center p-4"
+      style={{
+        backgroundImage: 'url("/simo hd.png")', 
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        // Menghilangkan warna solid dari App.jsx jika ada
+        backgroundColor: 'transparent', 
+      }}
+    >
+      <form 
+        onSubmit={submit} 
+        // ✅ PERBAIKAN: Mengubah kelas latar belakang form menjadi hitam transparan dengan blur
+        className="w-full max-w-sm bg-slate-900/90 backdrop-blur-sm border border-white/10 rounded-3xl p-6 space-y-3"
+      >
         <h1 className="text-xl font-bold">Login</h1>
         <input className="w-full p-2 rounded-xl bg-black/30 border border-white/10" placeholder="Email"
           value={email} onChange={(e)=>setEmail(e.target.value)} />

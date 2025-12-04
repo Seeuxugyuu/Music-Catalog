@@ -8,7 +8,7 @@ import { usePlayer } from "../context/PlayerProvider";
 export default function TracksPage() {
   const nav = useNavigate();
   const { user } = useAuth();
-  const { setQueue } = usePlayer();
+  const { setQueue, refreshKey } = usePlayer(); 
 
   const [tracks, setTracks] = useState([]);
   const [favIds, setFavIds] = useState([]);
@@ -16,7 +16,7 @@ export default function TracksPage() {
 
   // pagination
   const [page, setPage] = useState(1);
-  const PAGE_SIZE = 9;
+  const PAGE_SIZE = 9; // FIX: Define PAGE_SIZE (Memperbaiki ReferenceError)
 
   useEffect(() => {
     async function load() {
@@ -33,8 +33,9 @@ export default function TracksPage() {
         setLoading(false);
       }
     }
+    // Menambahkan refreshKey untuk memuat ulang data saat lagu baru diupload (Fix Refresh)
     load();
-  }, [user.id]);
+  }, [user.id, refreshKey]); 
 
   const totalPages = Math.max(1, Math.ceil(tracks.length / PAGE_SIZE));
   const pageItems = useMemo(() => {
@@ -51,7 +52,15 @@ export default function TracksPage() {
 
   const onOpenTrack = (trackId) => {
     const index = tracks.findIndex((t) => t.id === trackId);
-    setQueue(tracks, Math.max(0, index));
+    
+    // FIX PLAYBACK & IMAGE: Mapping properti agar sesuai dengan yang diharapkan PlayerProvider
+    const tracksToQueue = tracks.map(t => ({
+      ...t,
+      audio: t.audio_url,  // Map audio_url -> audio (untuk Playback)
+      cover: t.cover_url,  // Map cover_url -> cover (untuk Image)
+    }));
+    
+    setQueue(tracksToQueue, Math.max(0, index));
     nav(`/tracks/${trackId}`);
   };
 

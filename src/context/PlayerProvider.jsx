@@ -8,6 +8,10 @@ export function PlayerProvider({ children }) {
   const [queue, setQueueState] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // START FIX: REFRESH MECHANISM
+  const [refreshKey, setRefreshKey] = useState(0); 
+  // END FIX: REFRESH MECHANISM
+
   const [playing, setPlaying] = useState(false);
   const [cur, setCur] = useState(0);
   const [dur, setDur] = useState(0);
@@ -44,6 +48,12 @@ export function PlayerProvider({ children }) {
     setCurrentIndex(index);
   };
 
+  // START FIX: REFRESH MECHANISM
+  const triggerRefresh = () => {
+    setRefreshKey((prev) => prev + 1);
+  };
+  // END FIX: REFRESH MECHANISM
+  
   const currentTrack = queue[currentIndex] || null;
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < queue.length - 1;
@@ -86,11 +96,15 @@ export function PlayerProvider({ children }) {
   // AUTO PLAY tiap lagu berubah
   useEffect(() => {
     const a = audioRef.current;
-    if (!a || !currentTrack?.audio) return;
+    
+    // FIX PLAYBACK: Gunakan 'audio' (setelah di-map di TracksPage) atau fallback ke 'audio_url'
+    const audioSrc = currentTrack?.audio || currentTrack?.audio_url; 
+    
+    if (!a || !audioSrc) return; 
 
     setCur(0);
     setDur(0);
-    a.src = currentTrack.audio;
+    a.src = audioSrc; 
     a.load();
 
     const tryPlay = async () => {
@@ -102,7 +116,7 @@ export function PlayerProvider({ children }) {
       }
     };
     tryPlay();
-  }, [currentTrack?.audio]);
+  }, [currentTrack?.audio, currentTrack?.audio_url]); 
 
   const play = async () => {
     const a = audioRef.current;
@@ -150,8 +164,22 @@ export function PlayerProvider({ children }) {
       pause,
       toggle,
       seek,
+      refreshKey, // START FIX: REFRESH MECHANISM
+      triggerRefresh,
+      // END FIX: REFRESH MECHANISM
     }),
-    [queue, currentIndex, currentTrack, hasNext, hasPrev, playing, cur, dur, vol]
+    [
+      queue, 
+      currentIndex, 
+      currentTrack, 
+      hasNext, 
+      hasPrev, 
+      playing, 
+      cur, 
+      dur, 
+      vol, 
+      refreshKey // ADD dependency
+    ]
   );
 
   return (

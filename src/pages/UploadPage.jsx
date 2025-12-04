@@ -3,17 +3,20 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { uploadCover, uploadAudio, createTrack } from "../services/api";
 import { useAuth } from "../context/AuthProvider";
+import { usePlayer } from "../context/PlayerProvider"; 
 
 export default function UploadPage() {
   const nav = useNavigate();
   const { user } = useAuth();
+  const { triggerRefresh } = usePlayer(); 
 
   const coverInputRef = useRef(null);
   const audioInputRef = useRef(null);
 
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
-  const [coverFile, setCoverFile] = useState(null);
+  // FIX: Memastikan state coverFile terdefinisi (Memperbaiki ReferenceError)
+  const [coverFile, setCoverFile] = useState(null); 
   const [audioFile, setAudioFile] = useState(null);
   const [coverPreview, setCoverPreview] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -42,9 +45,6 @@ export default function UploadPage() {
       const coverUrl = await uploadCover(coverFile, user.id);
       const audioUrl = await uploadAudio(audioFile, user.id);
 
-      console.log("coverUrl:", coverUrl);
-      console.log("audioUrl:", audioUrl);
-
       const payload = {
         title: title.trim(),
         artist: artist.trim(),
@@ -52,12 +52,13 @@ export default function UploadPage() {
         audio_url: audioUrl,
       };
 
-      console.log("payload insert:", payload);
-
       const inserted = await createTrack(payload);
-      console.log("inserted:", inserted);
 
       alert("Lagu berhasil ditambah!");
+      
+      // FIX REFRESH: Memicu refresh data di TracksPage
+      triggerRefresh(); 
+      
       nav("/tracks");
     } catch (err) {
       console.error("UPLOAD/INSERT ERROR =>", err);

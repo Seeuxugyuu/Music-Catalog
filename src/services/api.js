@@ -76,8 +76,6 @@ export const uploadAudio = async (file, userId) => {
 /**
  * =========================================================
  * TRACKS
- * Table: public.tracks (tidak ada kolom user_id di schema kamu)
- * Kolom minimal: id, title, artist, cover_url, audio_url, created_at
  * =========================================================
  */
 export const getTracks = async () => {
@@ -121,7 +119,6 @@ export const deleteTrack = async (id) => {
 /**
  * =========================================================
  * FAVORITES
- * Table: public.favorites (id, user_id, track_id, created_at)
  * =========================================================
  */
 export const getFavorites = async (userId) => {
@@ -134,7 +131,6 @@ export const getFavorites = async (userId) => {
   return (data || []).map((x) => x.track_id);
 };
 
-// ✅ BARU: langsung ambil track favorit (buat FavoritesPage)
 export const getFavoriteTracks = async (userId) => {
   const { data, error } = await supabase
     .from("favorites")
@@ -143,7 +139,6 @@ export const getFavoriteTracks = async (userId) => {
 
   if (error) throw error;
 
-  // bentuk data: [{ tracks: {...} }, ...]
   return (data || []).map((row) => row.tracks).filter(Boolean);
 };
 
@@ -177,9 +172,6 @@ export const toggleFavorite = async (userId, trackId) => {
 /**
  * =========================================================
  * PLAYLISTS
- * Table: public.playlists (id, user_id, name, created_at)
- * Table: public.playlist_tracks (id, playlist_id, track_id, created_at)
- * NB: playlist_tracks TIDAK ada user_id (sesuai error kamu)
  * =========================================================
  */
 export const getPlaylists = async (userId) => {
@@ -246,9 +238,7 @@ export const removeTrackFromPlaylist = async (playlistId, trackId) => {
 
 /**
  * =========================================================
- * PROFILES (opsional)
- * Table: public.profiles (user_id, email, avatar_url, bio, updated_at)
- * Bucket: "avatars" (public)
+ * PROFILES
  * =========================================================
  */
 export const ensureProfile = async (user) => {

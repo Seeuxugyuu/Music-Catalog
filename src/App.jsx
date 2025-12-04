@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import BottomNav from "./components/BottomNav";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MiniPlayer from "./components/MiniPlayer";
+import { useAuth } from "./context/AuthProvider"; // Import useAuth
 
 import HomePage from "./pages/HomePage";
 import TracksPage from "./pages/TracksPage";
@@ -15,12 +16,24 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 
 export default function App() {
+  // Ambil state otentikasi
+  const { user, loading } = useAuth();
+  
+  // Jangan render apa pun (termasuk navbar) saat loading
+  if (loading) return null;
+
+  // Cek apakah user sudah login
+  const isAuthenticated = !!user;
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 pb-20">
+    // FIX SCROLL: Hapus 'pb-20'. BottomNav akan muncul hanya saat login.
+    <div className="min-h-screen bg-slate-950 text-slate-100">
       <Routes>
+        {/* Halaman yang TIDAK memerlukan proteksi (Login/Register) */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
+        {/* Semua halaman yang DIPROTEKSI */}
         <Route
           path="/"
           element={
@@ -92,10 +105,13 @@ export default function App() {
         />
       </Routes>
 
-      {/* mini player global */}
-      <MiniPlayer />
-
-      <BottomNav />
+      {/* FIX NAVBAR: Tampilkan MiniPlayer dan BottomNav HANYA jika isAuthenticated */}
+      {isAuthenticated && (
+        <>
+          <MiniPlayer />
+          <BottomNav />
+        </>
+      )}
     </div>
   );
 }

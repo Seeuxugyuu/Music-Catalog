@@ -7,7 +7,7 @@ import { Play } from "lucide-react";
  * - Wrapper pakai <div> (BUKAN button) supaya tidak ada nested button error.
  * - Action buttons stopPropagation biar kliknya gak ikut onOpen.
  * - onOpen / onPlay / onAddToPlaylist / onDelete dikirim track.id sebagai argumen pertama
- *   (argumen kedua track object, opsional).
+ * (argumen kedua track object, opsional).
  */
 export default function TrackCard({
   track,
@@ -20,8 +20,9 @@ export default function TrackCard({
   showActions = true
 }) {
   const cover =
-    track?.cover_url ||
+    // FIX IMAGE: Gunakan track.cover atau track.cover_url
     track?.cover ||
+    track?.cover_url ||
     "https://placehold.co/96x96/png?text=Cover";
 
   return (

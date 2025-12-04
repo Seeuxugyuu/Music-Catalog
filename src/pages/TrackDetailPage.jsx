@@ -81,7 +81,8 @@ export default function TrackDetailPage() {
   return (
     <div className="max-w-3xl mx-auto p-4 space-y-4">
       <img
-        src={track.cover}
+        // FIX IMAGE: Gunakan track.cover (dari queue) atau track.cover_url (dari DB getTrack)
+        src={track.cover || track.cover_url}
         alt=""
         className="w-full h-64 object-cover rounded-3xl border border-white/10"
       />
