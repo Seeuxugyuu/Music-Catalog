@@ -1,14 +1,20 @@
+// src/pages/TracksPage.jsx
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TrackCard from "../components/TrackCard";
-import { getFavorites, getTracks, toggleFavorite } from "../services/api";
+import { 
+  getFavorites, 
+  getTracks, 
+  toggleFavorite,
+  deleteTrack // Import deleteTrack
+} from "../services/api";
 import { useAuth } from "../context/AuthProvider";
 import { usePlayer } from "../context/PlayerProvider";
 
 export default function TracksPage() {
   const nav = useNavigate();
   const { user } = useAuth();
-  const { setQueue, refreshKey } = usePlayer(); 
+  const { setQueue, refreshKey, triggerRefresh } = usePlayer(); // Import triggerRefresh
 
   const [tracks, setTracks] = useState([]);
   const [favIds, setFavIds] = useState([]);
@@ -47,6 +53,28 @@ export default function TracksPage() {
     setFavIds((arr) =>
       nowFav ? [...arr, trackId] : arr.filter((x) => x !== trackId)
     );
+  };
+  
+  // Fungsi untuk menghapus lagu
+  const onDeleteTrack = async (trackId, track) => {
+    const ok = confirm(`Hapus lagu "${track.title}"?`);
+    if (!ok) return;
+
+    try {
+      // Panggil API deleteTrack
+      await deleteTrack(trackId);
+
+      // Perbarui state lokal untuk menghilangkan lagu dari daftar
+      setTracks((arr) => arr.filter((t) => t.id !== trackId));
+      
+      // Memicu refresh di komponen lain (misal HomePage)
+      triggerRefresh(); 
+
+      alert(`Lagu "${track.title}" berhasil dihapus.`);
+    } catch (e) {
+      console.error(e);
+      alert(e.message);
+    }
   };
 
   const onOpenTrack = (trackId) => {
@@ -94,6 +122,7 @@ export default function TracksPage() {
             onOpen={onOpenTrack}
             onToggleFavorite={onToggleFavorite}
             isFavorite={favIds.includes(t.id)}
+            onDelete={onDeleteTrack} // Meneruskan fungsi delete
           />
         ))}
       </div>

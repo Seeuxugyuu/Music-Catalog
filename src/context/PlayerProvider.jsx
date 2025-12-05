@@ -1,3 +1,5 @@
+// src/context/PlayerProvider.jsx
+
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 
 const PlayerContext = createContext(null);
@@ -107,15 +109,19 @@ export function PlayerProvider({ children }) {
     a.src = audioSrc; 
     a.load();
 
-    const tryPlay = async () => {
-      try {
-        await a.play();
-        setPlaying(true);
-      } catch {
-        setPlaying(false);
-      }
-    };
-    tryPlay();
+    if (true) { // Asumsi selalu autoplay jika track baru.
+      const tryPlay = async () => {
+        try {
+          await a.play();
+          setPlaying(true);
+        } catch {
+          setPlaying(false);
+        }
+      };
+      tryPlay();
+    } else {
+      setPlaying(false);
+    }
   }, [currentTrack?.audio, currentTrack?.audio_url]); 
 
   const play = async () => {

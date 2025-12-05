@@ -1,6 +1,7 @@
 // src/components/TrackCard.jsx
 import React from "react";
-import { Play } from "lucide-react";
+// Import Trash2 dan Heart dari lucide-react
+import { Play, Trash2, Heart } from "lucide-react"; 
 
 /**
  * TrackCard
@@ -81,26 +82,30 @@ export default function TrackCard({
             </button>
           )}
 
-          {/* Favorite */}
+          {/* Favorite - DIGANTI DENGAN ICON LUCIDE HEART */}
           {onToggleFavorite && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 onToggleFavorite?.(track.id);
               }}
+              // Tailwind class menentukan warna icon saat aktif/tidak aktif
               className={`p-2 rounded-lg hover:bg-white/10 transition ${
                 isFavorite ? "text-rose-400" : "text-slate-300"
               }`}
               title="Favorit"
               type="button"
             >
-              <span className="text-lg">
-                {isFavorite ? "❤️" : "🤍"}
-              </span>
+              {/* Menggunakan Lucide Heart.
+                  Ketika isFavorite, kita tambahkan class 'fill-current'
+                  agar icon terisi (filled) dengan warna dari parent ('text-rose-400'). */}
+              <Heart 
+                className={`h-4 w-4 ${isFavorite ? "fill-current" : ""}`} 
+              />
             </button>
           )}
 
-          {/* Delete (opsional) */}
+          {/* Delete (opsional) - DIGANTI DENGAN ICON LUCIDE TRASH2 */}
           {onDelete && (
             <button
               onClick={(e) => {
@@ -111,7 +116,7 @@ export default function TrackCard({
               title="Hapus"
               type="button"
             >
-              <span className="text-lg">🗑️</span>
+              <Trash2 className="h-4 w-4" />
             </button>
           )}
         </div>
