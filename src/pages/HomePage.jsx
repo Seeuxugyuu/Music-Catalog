@@ -2,15 +2,18 @@ import { useEffect, useMemo, useState } from "react";
 import { getTracks } from "../services/api";
 import { Link } from "react-router-dom";
 import { Sparkles, Music2, ChevronLeft, ChevronRight } from "lucide-react";
+import { usePlayer } from "../context/PlayerProvider"; // Import usePlayer untuk refreshKey
 
 export default function HomePage() {
+  const { refreshKey } = usePlayer(); // Ambil refreshKey
   const [tracks, setTracks] = useState([]);
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 5;
 
   useEffect(() => {
+    // Tambahkan refreshKey agar data me-reload jika ada lagu baru diupload
     getTracks().then((t) => setTracks(t));
-  }, []);
+  }, [refreshKey]);
 
   const totalPages = Math.max(1, Math.ceil(tracks.length / PAGE_SIZE));
 
@@ -23,7 +26,8 @@ export default function HomePage() {
   const prev = () => setPage((p) => Math.max(1, p - 1));
 
   return (
-    <div className="max-w-4xl mx-auto p-4 space-y-6">
+    // FIX SCROLL: Tambahkan pb-24 untuk memberi ruang BottomNav
+    <div className="max-w-4xl mx-auto p-4 space-y-6 pb-24">
       {/* HERO / PESAN MENGAMBANG + GRADASI GERAK */}
       <section className="relative overflow-hidden rounded-3xl border border-white/10 p-6 hero-animated-gradient">
         {/* glow blobs */}

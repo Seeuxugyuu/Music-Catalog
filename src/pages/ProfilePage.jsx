@@ -81,7 +81,9 @@ export default function ProfilePage() {
   };
 
   const onLogout = async () => {
-    const ok = confirm("Keluar dari akun?");
+    // FIX: Ganti alert/confirm dengan modal UI custom jika ini adalah aplikasi produksi.
+    // Untuk saat ini, kita gunakan yang ada sambil menunggu implementasi modal.
+    const ok = window.confirm("Keluar dari akun?");
     if (!ok) return;
     try {
       await signOut();
@@ -99,8 +101,8 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-4 space-y-4">
-      <h1 className="text-xl font-bold">Profil</h1>
+    <div className="max-w-3xl mx-auto p-4 space-y-6">
+      <h1 className="text-xl font-bold">Profil Pengguna</h1>
 
       <form onSubmit={onSave} className="space-y-4">
         {/* Header: avatar + email */}
@@ -175,6 +177,16 @@ export default function ProfilePage() {
           </button>
         </div>
       </form>
+      
+      <div className="border-t border-white/10 pt-4 space-y-3">
+        <h2 className="text-lg font-semibold text-emerald-300">Tentang Proyek Musik Katalog</h2>
+        <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-2 text-sm text-slate-300">
+          <p>
+            Proyek ini adalah sebuah aplikasi web progresif (PWA) yang berfungsi sebagai platform manajemen dan pemutaran musik pribadi. Tujuan utamanya adalah memberdayakan pengguna untuk mengunggah, mengelola, dan memutar koleksi audio digital mereka secara mandiri, didukung oleh fitur inti seperti kemampuan untuk menandai lagu sebagai favorit, mengatur trek ke dalam playlist kustom, dan memperbarui informasi profil.
+          </p>
+        </div>
+      </div>
+
     </div>
   );
 }

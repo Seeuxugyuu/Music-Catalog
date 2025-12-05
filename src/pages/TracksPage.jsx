@@ -16,7 +16,7 @@ export default function TracksPage() {
 
   // pagination
   const [page, setPage] = useState(1);
-  const PAGE_SIZE = 9; // FIX: Define PAGE_SIZE (Memperbaiki ReferenceError)
+  const PAGE_SIZE = 9; 
 
   useEffect(() => {
     async function load() {
@@ -33,7 +33,6 @@ export default function TracksPage() {
         setLoading(false);
       }
     }
-    // Menambahkan refreshKey untuk memuat ulang data saat lagu baru diupload (Fix Refresh)
     load();
   }, [user.id, refreshKey]); 
 
@@ -65,7 +64,8 @@ export default function TracksPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 space-y-3">
+    // FIX SCROLL: Tambahkan pb-24 untuk memberi ruang BottomNav
+    <div className="max-w-4xl mx-auto p-4 space-y-3 pb-24">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold">Daftar Lagu</h1>
         <button
